@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-test
+  labels:
+    app: celery-test
+    deployment: celery-test
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      pod: celery-test
+  template:
+    metadata:
+      labels:
+        pod: celery-test
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    spec:
+      containers:
+        - name: celery-test
+          image: kaisar7barlybay/celery_test:latest
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "100M"
+            limits:
+              cpu: "500m"
+              memory: "1000M"
+          command:
+            - "bash"
+            - "-c"
+            - "celery -A proj.celery worker -l info -f /var/log/celery/celery.log -Ofair --without-heartbeat --without-gossip --without-mingle"
+          env:
+            - name: RABBITMQ_HOST
+              value: "host.docker.internal:5672"
+      restartPolicy: Always
+      dnsPolicy: Default
+      hostNetwork: true
