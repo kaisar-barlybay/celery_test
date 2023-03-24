@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import environ  # type: ignore
 from pathlib import Path
 from utilities import get_logger
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -116,15 +115,3 @@ LOGGING = get_logger(DEBUG, 'celery_test',  ['proj'], 'proj')
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-env = environ.Env()
-environ.Env.read_env()
-
-# CELERY
-RABBITMQ_USER = env('RABBITMQ_USER', default='guest')
-RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD', default='guest')
-RABBITMQ_HOST = env('RABBITMQ_HOST', default='127.0.0.1:5672')
-CELERY_BROKER_URL = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}/"
-CELERY_BROKER_HEARTBEAT = 60
-CELERY_BROKER_CONNECTION_TIMEOUT = 60
-CELERY_TASK_ACKS_LATE = True
-CELERY_WORKER_CONCURRENCY = 1

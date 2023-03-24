@@ -10,4 +10,5 @@ RUN mkdir /var/log/celery -p
 RUN touch /var/log/celery/celery.log
 
 COPY . .
+EXPOSE 8080
 CMD celery -A proj.celery worker -l info -c 1 -n worker_celery_test

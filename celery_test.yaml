@@ -6,7 +6,7 @@ metadata:
     app: celery-test
     deployment: celery-test
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       pod: celery-test
@@ -20,6 +20,7 @@ spec:
       containers:
         - name: celery-test
           image: kaisar7barlybay/celery_test:latest
+          imagePullPolicy: Always
           resources:
             requests:
               cpu: "250m"
@@ -30,7 +31,7 @@ spec:
           command:
             - "bash"
             - "-c"
-            - "celery -A proj.celery worker -l info -f /var/log/celery/celery.log -Ofair --without-heartbeat --without-gossip --without-mingle"
+            - "celery -A proj.celery worker -l debug --pool gevent -c 1"
           env:
             - name: RABBITMQ_HOST
               value: "host.docker.internal:5672"
